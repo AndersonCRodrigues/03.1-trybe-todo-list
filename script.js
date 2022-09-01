@@ -10,3 +10,4 @@ body.appendChild(criaElemento('header', 'Minha Lista de Tarefas', 'class', 'head
 const textP = 'Clique duas vezes em um item para marcá-lo como completo';
 body.appendChild(criaElemento('p', textP, 'id', 'funcionamento'));
 body.appendChild(criaElemento('input', '', 'id', 'texto-tarefa'));
+body.appendChild(criaElemento('ol', '', 'id', 'lista-tarefas'));
