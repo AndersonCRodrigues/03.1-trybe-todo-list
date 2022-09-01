@@ -38,6 +38,15 @@ function complete(event) {
   else done.classList.toggle('completed');
 }
 
+function limpaLista() {
+  listTask = document.querySelector('#lista-tarefas');
+  let child = listTask.lastElementChild;
+  while (child) {
+    listTask.removeChild(child);
+    child = listTask.lastElementChild;
+  }
+}
+
 const body = document.getElementsByTagName('body')[0];
 body.appendChild(criaElemento('header', 'Minha Lista de Tarefas', 'class', 'header'));
 const textP = 'Clique duas vezes em um item para marcá-lo como completo';
@@ -45,6 +54,7 @@ body.appendChild(criaElemento('p', textP, 'id', 'funcionamento'));
 body.appendChild(criaElemento('input', '', 'id', 'texto-tarefa'));
 body.appendChild(criaElemento('ol', '', 'id', 'lista-tarefas'));
 body.appendChild(criaElemento('button', 'criar-tarefa', 'id', 'criar-tarefa'));
+body.appendChild(criaElemento('button', 'Apaga Tudo', 'id', 'apaga-tudo'));
 
 btnTarefas = document.querySelector('#criar-tarefa');
 btnTarefas.addEventListener('click', addTarefa);
@@ -55,4 +65,5 @@ for (const item of listTask) {
   item.addEventListener('dblclick', complete);
 }
 
-
+btnApagaTudo = document.querySelector('#apaga-tudo');
+btnApagaTudo.addEventListener('click', limpaLista);
