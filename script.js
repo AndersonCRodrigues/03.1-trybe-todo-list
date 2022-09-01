@@ -16,17 +16,20 @@ function addTarefa() {
   }
 }
 
-function removeBG() {
+function removeId() {
   listTask = document.querySelectorAll('li');
-  for (item of listTask) item.style.backgroundColor = '';
+  for (item of listTask) {
+    item.removeAttribute('id');
+  }
 }
 
 function selectItem(event) {
   const selected = event.target;
-  if (selected.style.backgroundColor === 'grey') selected.style.backgroundColor = '';
-  else {
-    removeBG();
-    selected.style.backgroundColor = 'grey';
+  if (selected.id === 'selected') {
+    selected.removeAttribute('id');
+  } else {
+    removeId();
+    selected.id = 'selected';
   }
 }
 
@@ -37,7 +40,7 @@ function complete(event) {
 }
 
 function limpaLista() {
-  listTask = document.querySelector('#lista-tarefas');
+  listTask = document.querySelector('ol');
   let child = listTask.lastElementChild;
   while (child) {
     listTask.removeChild(child);
@@ -74,11 +77,51 @@ function loadTasks() {
   listTask = document.querySelector('#lista-tarefas');
   if (localStorage.tasks) {
     for (const value of arrayTasks) {
-      console.log(value.text);
-    listTask.appendChild(criaElemento('li', `${value.text}`, 'class', `${value.class}`));
-    console.log(value.class);
+      listTask.appendChild(criaElemento('li', `${value.text}`, 'class', `${value.class}`));
     }
   }
+}
+
+function localiza(elemento) {
+  const task = document.querySelectorAll('li');
+  for (let i = 0; i < task.length; i += 1) {
+    if (elemento === task[i]) return i;
+  }
+}
+
+function troca(i, j, att) {
+  const task = document.querySelectorAll('li');
+  const auxiliar = task[i][att];
+  task[i][att] = task[j][att];
+  task[j][att] = auxiliar;
+}
+
+function moveUp() {
+  const task = document.querySelectorAll('li');
+  const elemento = document.getElementById('selected');
+  if (elemento && (elemento !== task[0])) {
+    const i = localiza(elemento);
+    troca(i, i - 1, 'innerText');
+    troca(i, i - 1, 'className');
+    troca(i, i - 1, 'id');
+  }
+}
+
+function moveDown() {
+  const task = document.querySelectorAll('li');
+  const elemento = document.getElementById('selected');
+  if (elemento && (elemento !== task[task.length - 1])) {
+    const i = localiza(elemento);
+    troca(i, i + 1, 'innerText');
+    troca(i, i + 1, 'className');
+    troca(i, i + 1, 'id');
+  }
+}
+
+function removeItem() {
+  const item = document.querySelector('#selected');
+  const list = document.querySelector('ol');
+  if (item) list.removeChild(item);
 }
 
 const body = document.getElementsByTagName('body')[0];
@@ -91,11 +134,14 @@ body.appendChild(criaElemento('button', 'criar-tarefa', 'id', 'criar-tarefa'));
 body.appendChild(criaElemento('button', 'Apaga Tudo', 'id', 'apaga-tudo'));
 body.appendChild(criaElemento('button', 'Remove Finalizado', 'id', 'remover-finalizados'));
 body.appendChild(criaElemento('button', 'Salva Tarefas', 'id', 'salvar-tarefas'));
+body.appendChild(criaElemento('button', 'Move Cima', 'id', 'mover-cima'));
+body.appendChild(criaElemento('button', 'Move Baixo', 'id', 'mover-baixo'));
+body.appendChild(criaElemento('button', 'Remove Selecionado', 'id', 'remover-selecionado'));
 
 btnTarefas = document.querySelector('#criar-tarefa');
 btnTarefas.addEventListener('click', addTarefa);
 
-listTask = document.querySelectorAll('#lista-tarefas');
+listTask = document.querySelectorAll('ol');
 for (const item of listTask) {
   item.addEventListener('click', selectItem);
   item.addEventListener('dblclick', complete);
@@ -109,5 +155,14 @@ btnRemoveFinalizado.addEventListener('click', removeFinalizado);
 
 btnSalvatarefas = document.querySelector('#salvar-tarefas');
 btnSalvatarefas.addEventListener('click', salvaTarefas);
+
+btnMoveCima = document.querySelector('#mover-cima');
+btnMoveCima.addEventListener('click', moveUp);
+
+btnMoveBaixo = document.querySelector('#mover-baixo');
+btnMoveBaixo.addEventListener('click', moveDown);
+
+btnRemoveSelected = document.querySelector('#remover-selecionado');
+btnRemoveSelected.addEventListener('click', removeItem);
 
 loadTasks();
