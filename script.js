@@ -8,11 +8,27 @@ function criaElemento(elemento, texto, atributo, valor) {
 function addTarefa() {
   const input = document.querySelector('#texto-tarefa');
   if (input.value !== '') {
-    const tarefa = criaElemento('li', 'class', 'list-tasks');
+    const tarefa = criaElemento('li', '', 'class', 'item-tasks');
     const lista = document.querySelector('#lista-tarefas');
     tarefa.innerText = input.value;
     lista.appendChild(tarefa);
     input.value = null;
+  }
+}
+
+function removeBG() {
+  listTask = document.querySelectorAll('.item-tasks');
+  for (item of listTask) item.style.backgroundColor = '';
+}
+
+function selectItem(event) {
+  const selected = event.target;
+  console.log(selected);
+  if (selected.style.backgroundColor === 'grey') selected.style.backgroundColor = '';
+  else {
+    removeBG();
+    selected.style.backgroundColor = 'grey';
+    selected.classList.add('selected');
   }
 }
 
@@ -26,3 +42,8 @@ body.appendChild(criaElemento('button', 'criar-tarefa', 'id', 'criar-tarefa'));
 
 btnTarefas = document.querySelector('#criar-tarefa');
 btnTarefas.addEventListener('click', addTarefa);
+
+listTask = document.querySelectorAll('#lista-tarefas');
+for (const item of listTask) {
+  item.addEventListener('click', selectItem);
+}
